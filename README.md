@@ -12,7 +12,7 @@ It takes genotyping data as input.
 
 For each unplaced contig, it gets all SNPs located on that SNPs and merges them into one "metaSNP" which for each individual carries the most common allele. When using genotypes, recombinations on a contig are rare, so in many cases the genotypes for one individual on one contig are identical anyway. It also merges all SNPs for placed contigs.
 
-Then, it compares all unplaced contigs against all placed contigs with a penalised Hamming distance - if both alleles for the individual are missing, add 0.75, if one is missing, add 0.5, if they are different, add 1, if they are identical, add 0. That means that the contig placed 
+Then, it compares all unplaced contigs against all placed contigs with a penalised Hamming distance - if both alleles for the individual are missing, add 0.75, if one is missing, add 0.5, if they are different, add 1, if they are identical, add 0. That means that the contig placed with the lowest score is the "best" score, preferably 0.
 
 Then it does a few extra tricks to increase accuracy:
 
