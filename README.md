@@ -10,7 +10,7 @@ It takes genotyping data as input.
 
 ### What does it do, in detail?
 
-For each unplaced contig, it gets all SNPs located on that SNPs and merges them into one "metaSNP" which for each individual carries the most common allele. When using genotypes, recombinations on a contig are rare, so in many cases the genotypes for one individual on one contig are identical anyway. It also merges all SNPs for placed contigs.
+For each unplaced contig, it collects all SNPs located on that SNPs and merges them into one "metaSNP" which for each individual carries the most common allele. Recombinations on a contig are rare, so in many cases the genotypes for one individual on one contig are identical. It also merges all SNPs for placed contigs.
 
 Then, it compares all unplaced contigs against all placed contigs with a penalised Hamming distance - if both alleles for the individual are missing, add 0.75, if one is missing, add 0.5, if they are different, add 1, if they are identical, add 0. That means that the contig placed with the lowest score is the "best" score, preferably 0.
 
@@ -18,7 +18,9 @@ Then it does a few extra tricks to increase accuracy:
 
 1. Are the best and the second-best placed partner contig on different chromosomes? If so, discard the contig, it's not placeable.
 
-2. Can we orient the contig? Take the first and last 5 SNPs if there are more or equal to 10 SNPs located on it, and see whether the last 5 SNPs are more similar to the SNPs of the preceding contig, and whether the first 5 SNPs are closer to the succeeding contig. If that is the case, reverse complement the contig. (Note: This happens very rarely).
+2. Can we orient the contig? Take the first and last 5 SNPs if there are more or equal to 10 SNPs located on it, and see whether the last 5 SNPs are more similar to the SNPs of the preceding contig, and whether the first 5 SNPs are closer to the succeeding contig. If that is the case, reverse complement the contig. (Note: This happens only rarely in my tests).
+
+It then places each unplaced contig behind its best partner contig. If several unplaced contig are placed behind the same placed contig, they are ordered based on how similar the unplaced contigs are to each other.
 
 ## How long does it run?
 
@@ -26,7 +28,7 @@ With a large plant genome and about a million SNPs it takes a few hours using on
 
 ## How accurate is it?
 
-Probably not *that* accurate - some (unpublished) tests show that the chromosome placement is ~ 98% correct, but I cannot test the base-pair level placement without optical maps etc. I would assume that the base-pair level placement is not very accurate.
+Probably not *that* accurate - some (unpublished) tests show that the chromosome placement is ~ 98% correct, but I cannot test the base-pair level placement without optical maps etc. I would assume that the base-pair level placement is not very accurate. As in genetic mapping algorithms, contigs that have identical genotypes are indistinguishable.
 
 ## What does it take as input files?
 
@@ -77,11 +79,11 @@ And the same for the unplaced contigs file. Relative or absolute paths are fine.
 
 ## Dependencies
 
-Install Go from https://golang.org/
+All you need is to install Go from https://golang.org/
 
 I've tested it with a few versions from 1.2 to 1.5.1. I've tried to keep it free from external dependencies as that just makes things complicated.
 
-I've only tested it under various Linux distributions, no clue whether it works under Windows.
+I've only tested it under Fedora and Ubuntu Linux, no clue whether it works under Windows.
 
 ## Installation
 
@@ -101,7 +103,7 @@ with these flags:
 
     -chrom chromFile -contig toPlaceFile
 
-Both `chromFile` and `toPlaceFile` are files detailing paths to the placed and unplaced contigs - see above.
+Both `chromFile` and `toPlaceFile` are files detailing paths to the placed and unplaced contigs - see above. The path can be relative or absolute.
 
 Optional flags:
 
@@ -120,3 +122,7 @@ You get one gff3 file per collection of placed contigs detailing where the origi
 You also get one file called `all_scores.txt` which details the best score (Hamming distance - 0 means no difference between the unplaced contig and the best partner-contig) for each unplaced contig. This file also stores for each unplaced contig how many recombinations per individual were counted on the contig.
 
 You also get `list_of_unplaceable_contigs.txt`, which details for what reason which contig couldn't be placed. This can be "No\_SNPs", "Different\_partners" (first and second best partner of an unplaced contig are on different chromosomes), and Score\_too\_low when you've supplied a cutoff.
+
+# License
+
+It's licensed under the MIT license. If you work for a commercial entity and want to use this software, I would like to request you to contact me via email (philipp.bayer@uwa.edu.au), our group ([the Applied Bioinformatics Group at the University of Western Australia](http://appliedbioinformatics.com.au/index.php/Main_Page)) is always looking for partners in [ARC linkage grants](http://www.arc.gov.au/linkage-projects).
