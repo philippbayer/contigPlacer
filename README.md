@@ -38,8 +38,8 @@ The map file (tab-delimited), one SNP per line, SNP-ID, chromosome, position:
 
 ```
 #fjFile = MAP
-M1  A01 10
-M2  A01 20
+M1    A01   10
+M2    A01   20
 M1000 A01   9,292
 etc.
 ```
@@ -48,9 +48,9 @@ The dat file (tab-delimited), one individual per line, first the header with all
 
 ```
 #fjFile = GENOTYPE
-    M1  M2  M1000 etc.
-Ind1    A    A    B etc.
-Ind2    B    B    A etc.
+        M1   M2   M1000  etc.
+Ind1    A    A    B      etc.
+Ind2    B    B    A      etc.
 ```
 
 The gff3 file detailing contigs, one contig per line, only the 4th, 5th and 9th element are important:
@@ -58,7 +58,7 @@ The gff3 file detailing contigs, one contig per line, only the 4th, 5th and 9th 
 ```
 ##gff-version    3
 ##sequence-region        A01    1       29136790
-A01 fasta   contig  1   4521    .   .   .   ID=Contig_1;Name=Contig_1
+A01 fasta   contig  1       4521    .   .   .   ID=Contig_1;Name=Contig_1
 A01 fasta   contig  4522    8999    .   .   .   ID=Contig_2;Name=Contig_2
 etc.
 ```
